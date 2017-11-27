@@ -82,11 +82,36 @@ class rwla2d_sp:
     U = None # Store the result values
     rng = None # Random number generator
 
-    L = 10 # Number of points evaluted each line
+    L = 10 # Linear length of the sqaure
     Nr = 100 # Number of random walks for each point
 
-    def __init__(self, L, Nr, seed):
+    def __init__(self, L, Nr, epsilon, seed):
         self.L = L
         self.Nr = Nr
+        self.epsilon = epsilon
         self.U = np.zeros((L, L))
         self.rng = np.random.RandomState(seed=seed)
+
+    def arrive_b(self, r):
+        "Judge whether the rw reaches the boundary.\
+        This is obviously boundary dependant."
+        return bool(r < self.epsilon)
+
+    def update_u(self, r, x, y):
+        "Get the value & update U when the rw reaches the boundary.\
+        This is obviously boundary dependent."
+
+    def rw_at(self, xo, yo):
+        "Evaluate point (xo, yo)."
+        x, y = xo, yo
+        for _ in range(self.Nr):
+            while True:
+                r = min(x, y, self.L-x, self.L-y)
+                if self.arrive_b(r):
+                    self.update_u(r, x, y)
+                    break
+                theta = 2 * np.pi * self.rng.uniform()
+                x += r * np.cos(theta)
+                y += r * np.sin(theta)
+
+    def rw_all(self, i):
