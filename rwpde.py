@@ -4,6 +4,8 @@ Use random walk to solve PDEs with BVPs.
 Random number generator: numpy.random
 
 1. Laplace Equation in 2D, with square lattice and boundray conditon.
+
+2, Walk on Sphere algorithm for Laplace Equation on 2D, lattice free.
 """
 
 import numpy as np
@@ -14,7 +16,7 @@ class rwla2d:
     L = 10 # Linear size of the square lattice
     Nr = 100 # Number of random walks for each point
     V = None # Value at the boudary & interior(for possion equation)
-    U = None # Store the result value
+    U = None # Store the result values
     rng = None # Random number generator
 
     def __init__(self, L, Nr, seed):
@@ -69,5 +71,22 @@ class rwla2d:
 
     def save_data(self, i):
         "Save the data."
-        fn = "U_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
+        fn = "./data/"+"U_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
         np.save(fn, self.U)
+
+class rwla2d_sp:
+    "Random walk on Spheres Algorithm for Laplace Eqaution, 2D.\
+    Here applied to the square boundary."
+
+    epsilon = 1.0 # thickness of the shell
+    U = None # Store the result values
+    rng = None # Random number generator
+
+    L = 10 # Number of points evaluted each line
+    Nr = 100 # Number of random walks for each point
+
+    def __init__(self, L, Nr, seed):
+        self.L = L
+        self.Nr = Nr
+        self.U = np.zeros((L, L))
+        self.rng = np.random.RandomState(seed=seed)

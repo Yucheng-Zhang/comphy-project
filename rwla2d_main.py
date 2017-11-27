@@ -8,37 +8,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 from rwpde import rwla2d
 
-def fx0(L):
+def fx0(l):
     "fx0"
-    return np.ones(L)
+    return np.ones(l)
 
-def fxL(L):
+def fxL(l):
     "fxL"
-    return np.zeros(L)
+    return np.zeros(l)
 
-def fy0(L):
+def fy0(l):
     "fy0"
-    return np.zeros(L)
+    return np.zeros(l)
 
-def fyL(L):
+def fyL(l):
     "fyL"
-    return np.zeros(L)
+    return np.zeros(l)
 
-def fi(L):
+def fi(l):
     "fi"
-    return np.zeros((L-2, L-2))
+    return np.zeros((l-2, l-2))
 
 if __name__ == '__main__':
     t_s = time.time()
     "main process"
-    num_pro = mp.cpu_count()
-    # num_pro = 4
+    num_pro = mp.cpu_count() # Number of cores
+    # num_pro = 1
     print("You have", num_pro, "cores.")
 
     seeds = [13203179, 3274672, 2176387, 12381121, 4367845, 215376, 439583, 2137812]
 
-    L = 100
-    Nr = 5000
+    L = 10
+    Nr = 1000
     us = [rwla2d(L, Nr//num_pro, seeds[i]) for i in range(num_pro)]
     for i in range(num_pro): # initialize
         us[i].init_bv(fx0, fxL, fy0, fyL)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     U_ave = np.zeros((L, L))
     U_r = []
     for i in range(num_pro):
-        U_r.append(np.load("U_"+str(L)+"_"+str(Nr//num_pro)+"_"+str(i)+".npy"))
+        U_r.append(np.load("./data/"+"U_"+str(L)+"_"+str(Nr//num_pro)+"_"+str(i)+".npy"))
     for i in range(num_pro):
         U_ave += U_r[i] / num_pro
 
