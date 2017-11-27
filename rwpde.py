@@ -59,13 +59,15 @@ class rwla2d:
                     self.U[xo, yo] += self.V[rx, ry] / self.Nr
                     break
 
-    def rw_all(self, que):
+    def rw_all(self, i):
         "Evaluate all points."
         for xo in range(1, self.L-1):
-            # print(xo)
+            print(xo)
             for yo in range(1, self.L-1):
                 self.rw_at(xo, yo)
-        que.put(self.U)
+        self.save_data(i)
 
-    def save_data(self):
+    def save_data(self, i):
         "Save the data."
+        fn = "U_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
+        np.save(fn, self.U)
