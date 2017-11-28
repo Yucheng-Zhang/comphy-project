@@ -5,7 +5,9 @@ Random number generator: numpy.random
 
 1. Laplace Equation in 2D, with square lattice and boundray conditon.
 
-2, Walk on Sphere algorithm for Laplace Equation on 2D, lattice free.
+2, Walk on Sphere algorithm for Laplace Equation on 2D, lattice free, square boundary.
+
+3, Walk on Sphere algorithm for Laplace Eqaution on 2D, lattice free, circle boundary.
 """
 
 import numpy as np
@@ -129,4 +131,77 @@ class rwla2d_sp:
     def save_data(self, i):
         "Save the data."
         fn = "./data/"+"U_sp_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
+        np.save(fn, self.U)
+
+class rwla2d_sp_c:
+    "Random walk on Spheres Algorithm for Laplace Eqaution, 2D.\
+    Here applied to the circle boundary."
+
+    epsilon = 0.5 # thickness of the shell
+    U = None # Store the result values, together with X, Y
+    X = None
+    Y = None
+    rng = None # Random number generator
+
+    R = 10 # Radius of the circle
+    Nr = 100 # Number of random walks for each point
+    Nro = 100 # Number of ro to be evaluated
+    Nphio = 10 # Number of phio to be evaluated on the first ro
+
+    def __init__(self, R, Nr, epsilon, Nro, Nphio, seed):
+        self.R = R
+        self.Nr = Nr
+        self.epsilon = epsilon
+        self.rng = np.random.RandomState(seed=seed)
+
+        self.Nro = Nro
+        self.Nphio = Nphio
+
+        Nops = Nphio * Nro * (Nro - 1) // 2
+        self.X = np.zeros(Nops)
+        self.Y = np.zeros(Nops)
+        self.U = np.zeros(Nops)
+
+    def arrive_b(self, r):
+        "Judge whether the rw reaches the boundary.\
+        This is obviously boundary dependant."
+        return bool(self.R - r < self.epsilon)
+
+    def update_u(self, r, c_phi, s_phi):
+        "Get the value & update U when the rw reaches the boundary.\
+        This is obviously boundary dependent."
+        
+
+    def rw_at(self, xo, yo):
+        "Evaluate point (xo, yo)."
+        for _ in range(self.Nr):
+            x, y = xo, yo
+            while True:
+                r = np.sqrt(x**2 + y**2)
+                s_phi = y / r
+                c_phi = x / r
+                if self.arrive_b(r):
+                    self.update_u(r, c_phi, s_phi)
+                    break
+                theta = 2 * np.pi * self.rng.uniform()
+                x += (self.R - r) * np.cos(theta)
+                y += (self.R - r) * np.sin(theta)
+
+    def rw_all(self, i):
+        "Evaluate all points."
+        for i in range(1, self.Nro):
+            print(i)
+            ro = i / self.Nro * self.R
+            Nphi = i * self.Nphio
+            for j in range(Nphi):
+                phio = j / Nphi * 2 * np.pi
+                xo = ro * np.cos(phio)
+                yo = ro * np.sin(phio)
+
+                self.rw_at(xo, yo)
+        self.save_data(i)
+
+    def save_data(self, i):
+        "Save the data."
+        fn = "./data/"+"U_sp_c_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
         np.save(fn, self.U)
