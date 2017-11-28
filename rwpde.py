@@ -78,7 +78,7 @@ class rwla2d_sp:
     "Random walk on Spheres Algorithm for Laplace Eqaution, 2D.\
     Here applied to the square boundary."
 
-    epsilon = 1.0 # thickness of the shell
+    epsilon = 0.5 # thickness of the shell
     U = None # Store the result values
     rng = None # Random number generator
 
@@ -97,21 +97,36 @@ class rwla2d_sp:
         This is obviously boundary dependant."
         return bool(r < self.epsilon)
 
-    def update_u(self, r, x, y):
+    def update_u(self, xo, yo, r, x, y):
         "Get the value & update U when the rw reaches the boundary.\
         This is obviously boundary dependent."
+        if r == x:
+            self.U[xo, yo] += 1.0 / self.Nr
+        else:
+            self.U[xo, yo] += 0
 
     def rw_at(self, xo, yo):
         "Evaluate point (xo, yo)."
-        x, y = xo, yo
         for _ in range(self.Nr):
+            x, y = xo, yo
             while True:
                 r = min(x, y, self.L-x, self.L-y)
                 if self.arrive_b(r):
-                    self.update_u(r, x, y)
+                    self.update_u(xo, yo, r, x, y)
                     break
                 theta = 2 * np.pi * self.rng.uniform()
                 x += r * np.cos(theta)
                 y += r * np.sin(theta)
 
     def rw_all(self, i):
+        "Evaluate all points."
+        for xo in range(1, self.L):
+            print(xo)
+            for yo in range(1, self.L):
+                self.rw_at(xo, yo)
+        self.save_data(i)
+
+    def save_data(self, i):
+        "Save the data."
+        fn = "./data/"+"U_sp_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
+        np.save(fn, self.U)
