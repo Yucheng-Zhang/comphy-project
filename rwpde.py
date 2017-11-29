@@ -147,6 +147,7 @@ class rwla2d_sp_c:
     Nr = 100 # Number of random walks for each point
     Nro = 100 # Number of ro to be evaluated
     Nphio = 10 # Number of phio to be evaluated on the first ro
+    count = 0
 
     def __init__(self, R, Nr, epsilon, Nro, Nphio, seed):
         self.R = R
@@ -162,15 +163,17 @@ class rwla2d_sp_c:
         self.Y = np.zeros(Nops)
         self.U = np.zeros(Nops)
 
+        self.count = 0
+
     def arrive_b(self, r):
         "Judge whether the rw reaches the boundary.\
         This is obviously boundary dependant."
         return bool(self.R - r < self.epsilon)
 
-    def update_u(self, r, c_phi, s_phi):
+    def update_u(self, c_phi, s_phi):
         "Get the value & update U when the rw reaches the boundary.\
         This is obviously boundary dependent."
-        
+        self.U[self.count] += 2*c_phi*s_phi / self.Nr
 
     def rw_at(self, xo, yo):
         "Evaluate point (xo, yo)."
@@ -181,13 +184,13 @@ class rwla2d_sp_c:
                 s_phi = y / r
                 c_phi = x / r
                 if self.arrive_b(r):
-                    self.update_u(r, c_phi, s_phi)
+                    self.update_u(c_phi, s_phi)
                     break
                 theta = 2 * np.pi * self.rng.uniform()
                 x += (self.R - r) * np.cos(theta)
                 y += (self.R - r) * np.sin(theta)
 
-    def rw_all(self, i):
+    def rw_all(self, k):
         "Evaluate all points."
         for i in range(1, self.Nro):
             print(i)
@@ -197,11 +200,13 @@ class rwla2d_sp_c:
                 phio = j / Nphi * 2 * np.pi
                 xo = ro * np.cos(phio)
                 yo = ro * np.sin(phio)
-
+                self.X[self.count] = xo
+                self.Y[self.count] = yo
                 self.rw_at(xo, yo)
-        self.save_data(i)
+                self.count += 1
+        self.save_data(k)
 
-    def save_data(self, i):
+    def save_data(self, k):
         "Save the data."
-        fn = "./data/"+"U_sp_c_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
-        np.save(fn, self.U)
+        fn = "./data/"+"U_sp_c_"+str(self.Nro)+str(self.Nphio)+"_"+str(self.Nr)+"_"+str(k)
+        np.savez(fn, self.X, self.Y, self.U)
