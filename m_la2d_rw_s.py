@@ -1,12 +1,12 @@
 """
-test. multiprocessing
+The main process for la2d_rw_s.
 """
 
 import time
 import multiprocessing as mp
 import numpy as np
 import matplotlib.pyplot as plt
-from rwpde import rwla2d
+from rwpde import la2d_rw_s
 
 def fx0(l):
     "fx0"
@@ -30,16 +30,16 @@ def fi(l):
 
 if __name__ == '__main__':
     t_s = time.time()
-    "main process"
-    num_pro = mp.cpu_count() # Number of cores
+
     # num_pro = 1
-    print("You have", num_pro, "cores.")
+    num_pro = mp.cpu_count() # Number of cores
+    print("The number of cores:", num_pro)
 
     seeds = [13203179, 3274672, 2176387, 12381121, 4367845, 215376, 439583, 2137812]
 
     L = 10
     Nr = 1000
-    us = [rwla2d(L, Nr//num_pro, seeds[i]) for i in range(num_pro)]
+    us = [la2d_rw_s(L, Nr//num_pro, seeds[i]) for i in range(num_pro)]
     for i in range(num_pro): # initialize
         us[i].init_bv(fx0, fxL, fy0, fyL)
         us[i].init_q(fi)

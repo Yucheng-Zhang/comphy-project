@@ -1,19 +1,24 @@
 """
-Use random walk to solve PDEs with BVPs.
+The definition of all classes.
 
-Random number generator: numpy.random
+Author: Yucheng Zhang
+Dated: 11/30/2017
 
-1. Laplace Equation in 2D, with square lattice and boundray conditon.
+Random Number Generator: numpy.random
 
-2, Walk on Sphere algorithm for Laplace Equation on 2D, lattice free, square boundary.
+- la2d_rw_s: 2D Laplace (Poisson) Equation, Square Boundray, Random Walk on square lattice grid
 
-3, Walk on Sphere algorithm for Laplace Eqaution on 2D, lattice free, circle boundary.
+- la2d_wos_s: 2D Laplace Equation, Square Boundary, Walk on Sphere algorithm
+
+- la2d_wos_c: 2D Laplace Equation, Circle Boundary, Walk on Sphere algorithm
+
+Note: Given a problem, the things to consider include dimension, the shape of the boundary, the value at the boundary etc. These details affect the code in many places, so even though the algorithm is the same, it's hard to write a general code for all problems. But it's easy to modify the codes for a new practical problem. The classes here are some examples, which are used in my report.
 """
 
 import numpy as np
 
-class rwla2d:
-    "Random walk & Laplace (Poisson) Equation & 2D & Square lattice."
+class la2d_rw_s:
+    "2D Laplace Equation, Square boundary, Square lattice grid."
 
     L = 10 # Linear size of the square lattice
     Nr = 100 # Number of random walks for each point
@@ -76,9 +81,8 @@ class rwla2d:
         fn = "./data/"+"U_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
         np.save(fn, self.U)
 
-class rwla2d_sp:
-    "Random walk on Spheres Algorithm for Laplace Eqaution, 2D.\
-    Here applied to the square boundary."
+class la2d_wos_s:
+    "2D Laplace Equation, Square Boundary, Walk on Sphere."
 
     epsilon = 0.5 # thickness of the shell
     U = None # Store the result values
@@ -133,9 +137,8 @@ class rwla2d_sp:
         fn = "./data/"+"U_sp_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
         np.save(fn, self.U)
 
-class rwla2d_sp_c:
-    "Random walk on Spheres Algorithm for Laplace Eqaution, 2D.\
-    Here applied to the circle boundary."
+class la2d_wos_c:
+    "2D Laplace Eqaution, Circle Boundary, Walk on Sphere."
 
     epsilon = 0.5 # thickness of the shell
     U = None # Store the result values, together with X, Y
@@ -166,13 +169,12 @@ class rwla2d_sp_c:
         self.count = 0
 
     def arrive_b(self, r):
-        "Judge whether the rw reaches the boundary.\
-        This is obviously boundary dependant."
+        "Judge whether the rw reaches the boundary."
         return bool(self.R - r < self.epsilon)
 
     def update_u(self, c_phi, s_phi):
-        "Get the value & update U when the rw reaches the boundary.\
-        This is obviously boundary dependent."
+        "Get the value & update U when the rw reaches the boundary."
+        # The boundary value is set here.
         self.U[self.count] += 2*c_phi*s_phi / self.Nr
 
     def rw_at(self, xo, yo):

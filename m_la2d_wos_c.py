@@ -1,19 +1,19 @@
 """
-test. multiprocessing
+The main process for la2d_wos_c.
 """
 
 import time
 import multiprocessing as mp
 import numpy as np
 import matplotlib.pyplot as plt
-from rwpde import rwla2d_sp_c
+from rwpde import la2d_wos_c
 
 if __name__ == '__main__':
     t_s = time.time()
-    "main process"
-    num_pro = mp.cpu_count() # Number of cores
+
     # num_pro = 1
-    print("You have", num_pro, "cores.")
+    num_pro = mp.cpu_count() # Number of cores
+    print("The number of cores:", num_pro)
 
     seeds = [13203179, 3274672, 2176387, 12381121, 4367845, 215376, 439583, 2137812]
 
@@ -21,17 +21,17 @@ if __name__ == '__main__':
     Nr = 1000
     Nro = 100
     Nphio = 5
-    # us = [rwla2d_sp_c(R, Nr//num_pro, 0.1, Nro, Nphio, seeds[i]) for i in range(num_pro)]
+    us = [la2d_wos_c(R, Nr//num_pro, 0.1, Nro, Nphio, seeds[i]) for i in range(num_pro)]
 
-    # processes = [mp.Process(target=us[i].rw_all, args=(i,)) for i in range(num_pro)]
+    processes = [mp.Process(target=us[i].rw_all, args=(i,)) for i in range(num_pro)]
 
-    # for p in processes:
-    #     p.start()
-    # print("Processes start successfully!")
+    for p in processes:
+        p.start()
+    print("Processes start successfully!")
 
-    # for p in processes:
-    #     p.join()
-    # print("Processes end successfully!")
+    for p in processes:
+        p.join()
+    print("Processes end successfully!")
 
     # Process the data
     U_ave = np.zeros(Nphio * Nro * (Nro - 1) // 2)

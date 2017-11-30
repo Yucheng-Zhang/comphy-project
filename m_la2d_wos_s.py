@@ -1,25 +1,26 @@
 """
-test. multiprocessing
+The main process for la2d_wos_s.
 """
 
 import time
 import multiprocessing as mp
 import numpy as np
 import matplotlib.pyplot as plt
-from rwpde import rwla2d_sp
+from rwpde import la2d_wos_s
 
 if __name__ == '__main__':
     t_s = time.time()
-    "main process"
-    num_pro = mp.cpu_count() # Number of cores
+
     # num_pro = 1
-    print("You have", num_pro, "cores.")
+    num_pro = mp.cpu_count() # Number of cores
+    print("The number of cores:", num_pro)
 
-    seeds = [13203179, 3274672, 2176387, 12381121, 4367845, 215376, 439583, 2137812]
+    
+    seeds = [13203179, 3274672, 2176387, 12381121, 4367845, 215376, 439583, 2137812] # The seeds for different processes
 
-    L = 100
+    L = 100 # 
     Nr = 10000
-    us = [rwla2d_sp(L, Nr//num_pro, 0.1, seeds[i]) for i in range(num_pro)]
+    us = [la2d_wos_s(L, Nr//num_pro, 0.1, seeds[i]) for i in range(num_pro)]
 
     processes = [mp.Process(target=us[i].rw_all, args=(i,)) for i in range(num_pro)]
 
