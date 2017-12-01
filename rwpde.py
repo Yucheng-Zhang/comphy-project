@@ -1,8 +1,7 @@
 """
 The definition of all classes.
 
-Author: Yucheng Zhang
-Dated: 11/30/2017
+Yucheng Zhang, yz4035@nyu.edu, 11/30/2017
 
 Random Number Generator: numpy.random
 
@@ -12,7 +11,7 @@ Random Number Generator: numpy.random
 
 - la2d_wos_c: 2D Laplace Equation, Circle Boundary, Walk on Sphere algorithm
 
-Note: Given a problem, the things to consider include dimension, the shape of the boundary, the value at the boundary etc. These details affect the code in many places, so even though the algorithm is the same, it's hard to write a general code for all problems. But it's easy to modify the codes for a new practical problem. The classes here are some examples, which are used in my report.
+Note: Given a problem, the things to consider include dimension, the shape of the boundary, the value at the boundary etc. These details affect the code in many places, so even though the algorithm is the similar, it's hard to write a general code for all problems. But it's easy to modify the codes for a new practical problem. The classes defined here are some examples, which are used in my report. For a new problem, find the "problem dependent" parts and modify them.
 """
 
 import numpy as np
