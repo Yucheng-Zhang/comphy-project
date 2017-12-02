@@ -34,8 +34,6 @@ def fi(l):
 
 def main():
     "main method."
-    # get the beginning time
-    t_s = time.time()
 
     # get the number of cores
     num_pro = mp.cpu_count()
@@ -58,6 +56,9 @@ def main():
     # set up all processes
     processes = [mp.Process(target=us[i].rw_all, args=(i,)) for i in range(num_pro)]
 
+    # get the beginning time
+    t_s = time.time()
+
     # start all processes
     for p in processes:
         p.start()
@@ -67,6 +68,9 @@ def main():
     for p in processes:
         p.join()
     print("Processes end successfully!")
+
+    # output the total running time of the program
+    print("Takes", time.time()-t_s, "s.")
 
     # process the data, problem dependent
     U_ave = np.zeros((L, L))
@@ -81,8 +85,5 @@ def main():
     plt.imshow(U_T, origin="lower")
     plt.savefig("test.pdf", bbox_inches="tight")
     plt.close()
-
-    # output the total running time of the program
-    print("Takes", time.time()-t_s, "s.")
 
 if __name__ == '__main__': main()

@@ -1,7 +1,7 @@
 """
 The definition of all classes.
 
-Yucheng Zhang, yz4035@nyu.edu, 11/30/2017
+Yucheng Zhang, yz4035@nyu.edu, 12/02/2017
 
 Random Number Generator: numpy.random
 
@@ -15,6 +15,8 @@ Note: Given a problem, the things to consider include dimension, the shape of th
 """
 
 import numpy as np
+
+###########################################################################
 
 class la2d_rw_s:
     "2D Laplace Equation, Square boundary, Square lattice grid."
@@ -80,35 +82,52 @@ class la2d_rw_s:
         fn = "./data/"+"U_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
         np.save(fn, self.U)
 
+###########################################################################
+
 class la2d_wos_s:
     "2D Laplace Equation, Square Boundary, Walk on Sphere."
 
     epsilon = 0.5 # thickness of the shell
     U = None # Store the result values
+    X = None
+    Y = None
     rng = None # Random number generator
 
-    L = 10 # Linear length of the sqaure
+    L = 10 # the length of the square boundary
     Nr = 100 # Number of random walks for each point
+    Nl = 100 # number of points to be evaluated per line
+    count = 0
 
-    def __init__(self, L, Nr, epsilon, seed):
+    def __init__(self, L, Nr, epsilon, Nl, seed):
         self.L = L
         self.Nr = Nr
         self.epsilon = epsilon
         self.U = np.zeros((L, L))
         self.rng = np.random.RandomState(seed=seed)
+        self.Nl = Nl
+
+        Nops = (self.Nl-1)**2
+        self.X = np.zeros(Nops)
+        self.Y = np.zeros(Nops)
+        self.U = np.zeros(Nops)
+        self.count = 0
 
     def arrive_b(self, r):
         "Judge whether the rw reaches the boundary.\
         This is obviously boundary dependant."
         return bool(r < self.epsilon)
 
-    def update_u(self, xo, yo, r, x, y):
+    def update_u(self, r, x, y):
         "Get the value & update U when the rw reaches the boundary.\
         This is obviously boundary dependent."
         if r == x:
-            self.U[xo, yo] += 1.0 / self.Nr
+            self.U[self.count] += 1.0 / self.Nr
+        elif r == y:
+            self.U[self.count] += 2.0 / self.Nr
+        elif r == self.L-x:
+            self.U[self.count] += 3.0 / self.Nr
         else:
-            self.U[xo, yo] += 0
+            self.U[self.count] += 4.0 / self.Nr
 
     def rw_at(self, xo, yo):
         "Evaluate point (xo, yo)."
@@ -117,7 +136,7 @@ class la2d_wos_s:
             while True:
                 r = min(x, y, self.L-x, self.L-y)
                 if self.arrive_b(r):
-                    self.update_u(xo, yo, r, x, y)
+                    self.update_u(r, x, y)
                     break
                 theta = 2 * np.pi * self.rng.uniform()
                 x += r * np.cos(theta)
@@ -125,16 +144,23 @@ class la2d_wos_s:
 
     def rw_all(self, i):
         "Evaluate all points."
-        for xo in range(1, self.L):
-            print(xo)
-            for yo in range(1, self.L):
+        for i in range(1, self.Nl):
+            print(i)
+            xo = i / self.Nl * self.L
+            for j in range(1, self.Nl):
+                yo = j / self.Nl * self.L
+                self.X[self.count] = xo
+                self.Y[self.count] = yo
                 self.rw_at(xo, yo)
+                self.count += 1
         self.save_data(i)
 
     def save_data(self, i):
         "Save the data."
         fn = "./data/"+"U_sp_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
         np.save(fn, self.U)
+
+###########################################################################
 
 class la2d_wos_c:
     "2D Laplace Eqaution, Circle Boundary, Walk on Sphere."
@@ -174,7 +200,8 @@ class la2d_wos_c:
     def update_u(self, c_phi, s_phi):
         "Get the value & update U when the rw reaches the boundary."
         # The boundary value is set here.
-        self.U[self.count] += 2*c_phi*s_phi / self.Nr
+        # self.U[self.count] += 2*c_phi*s_phi / self.Nr
+        self.U[self.count] += np.sign(c_phi) / self.Nr
 
     def rw_at(self, xo, yo):
         "Evaluate point (xo, yo)."
@@ -209,5 +236,7 @@ class la2d_wos_c:
 
     def save_data(self, k):
         "Save the data."
-        fn = "./data/"+"U_sp_c_"+str(self.Nro)+str(self.Nphio)+"_"+str(self.Nr)+"_"+str(k)
+        fn = "./data/"+"U_sp_c_"+str(self.Nro)+"_"+str(self.Nphio)+"_"+str(self.Nr)+"_"+str(k)
         np.savez(fn, self.X, self.Y, self.U)
+
+###########################################################################
