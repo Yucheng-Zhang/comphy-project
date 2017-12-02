@@ -35,8 +35,13 @@ We mainly focus on Laplace's Equation with Dirichlet Boundary Conditions,
 \begin{equation}
     u_{i,j} = \frac{1}{4} \qty(u_{i+1,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1}).
 \end{equation}
+As shown in FIG.~\ref{fig:disc}.
 
-% add figure here
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{./figs/disc}
+    \caption{\label{fig:disc} Finite centered difference on 2D.}
+\end{figure}
 
 For the relaxation method, we use this equation, start from the boundary, and iterate until we get the desired accuracy. Here we look at this equation in a different way. We should notice that the value at one point is the average of its neighbours' values. So we can regard the $\frac{1}{4}$ as the statistical weight of each neighbour while calculating the value of the center point. Then we can construct the Monte Carlo method based on this point of view.
 
@@ -58,7 +63,19 @@ As we should notice, for the Laplace Equation, one estimate given by one random 
 
 Consider a sphere centered at $\bm{r}$, for a simple Brownian motion starting from $\bm{r}$, the possibility for the motion to reach any point on the sphere is equal. So since the path doesn't matter here for the Laplace equation, why do we simulate the Brownian motion step by step? We can jump to one point on the sphere directly!
 
-% Figure explaining WoS
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.46\textwidth]{./figs/wos}
+    \caption{\label{fig:wos} Walk on Spheres method.}
+\end{figure}
+
+The Walk on Spheres (WoS) method is shown in FIG.~\ref{fig:wos}. Here are some explainations.
+\begin{itemize}
+    \item The radius of the spheres (circles in 2D) are determined by the shortest distance from the point to the boundary, e.g. $r_0$, $r_1$, and $r_2$ in FIG.~\ref{fig:wos}.
+    \item The next point is chosen randomly on the sphere, e.g. points $1, 2, 3$ in FIG.~\ref{fig:wos}.
+    \item Since the WoS method is grid-free, we use the shell with thickness $\epsilon$ to judge whether the random motion reaches the boundary, as shown in FIG.~\ref{fig:wos}.
+\end{itemize}
+
 
 \subsection{Characteristics of Monte Carlo method}
 
@@ -79,11 +96,23 @@ Not only different points, as mentioned above, but also different estimates for 
     \item Parallelize the different estimates of one point, then average the results from different processes.
     \item Parallelize the set of points to be evaluated.
 \end{itemize}
-In this project, we take the first way.
 
 
 \section{Implementation \& Analysis}
 
+In this section, we first introduce how the programs are implemented. Then we use these methods to study two practical problems and analyze the properties of these methods.
+
+\subsection{Parallelization in \emph{Python}}
+
+In \emph{Python}, there are many packages for parallel computing. In this project, we use the \emph{multiprocessing} package. For a given set of points to be evaluated, we allocate the total number of independent estimates of every point to all available cores. Then we initialize the random number generators in all processes with different seeds. Here we use the \emph{numpy.random} module to produce random numbers, which can be initialized with \emph{numpy.random.RandomState(seed)}.
+
+\subsection{Square Boundary Problem}
+
+Assume we have a 2D Laplace problem with the boundary given as a square.
+
+\subsection{Circle Boundary Problem}
+
+Here we study the 2D Laplace problem with a circle boundary.
 
 \section{Summary \& Future Work}
 
