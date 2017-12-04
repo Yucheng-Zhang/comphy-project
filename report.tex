@@ -8,7 +8,7 @@
 
 \begin{document}
     
-\title{Random Walk for Solving PDEs\\- Report for Computational Physics Final Project}
+\title{Monte Carlo methods for Solving PDEs\\- Report for Computational Physics Final Project}
 \author{Yucheng Zhang}
 \email{yz4035@nyu.edu}
 \affiliation{Department of Physics, New York University}
@@ -46,6 +46,12 @@ As shown in FIG.~\ref{fig:disc}.
 For the relaxation method, we use this equation, start from the boundary, and iterate until we get the desired accuracy. Here we look at this equation in a different way. We should notice that the value at one point is the average of its neighbours' values. So we can regard the $\frac{1}{4}$ as the statistical weight of each neighbour while calculating the value of the center point. Then we can construct the Monte Carlo method based on this point of view.
 
 \subsection{Simple Random Walk Method}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{./figs/srw}
+    \caption{\label{fig:srw} Simple Random Walk method.}
+\end{figure}
 
 Given the point $P_0$ whose value we want to evaluate on the grid,
 \begin{enumerate}
@@ -110,11 +116,39 @@ In \emph{Python}, there are many packages for parallel computing. In this projec
 
 Assume we have a 2D Laplace problem with the boundary given as a square.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{./figs/srw_s}
+    \caption{\label{fig:srw_s} SRW method on 2D Square Boundary with Square Lattice.}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{./figs/wos_s}
+    \caption{\label{fig:wos_s} WoS method on 2D Square Boundary.}
+\end{figure}
+
 \subsection{Circle Boundary Problem}
 
 Here we study the 2D Laplace problem with a circle boundary.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{./figs/wos_c}
+    \caption{\label{fig:wos_c} WoS method on 2D Circle Boundary.}
+\end{figure}
+
+\subsection{The Influence of $\epsilon$}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{./figs/ep_t}
+    \caption{\label{fig:ep_t} The running time - $\epsilon$ relation on both square and circle boundary.}
+\end{figure}
+
 \section{Summary \& Future Work}
+
+
 
 \section{Acknowledgement}
 

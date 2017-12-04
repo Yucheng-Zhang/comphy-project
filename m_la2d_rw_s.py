@@ -44,8 +44,8 @@ def main():
     seeds = rng.random_integers(0, high=2147483647, size=num_pro)
 
     # set the parameters, problem dependent
-    L = 10
-    Nr = 1000
+    L = 100
+    Nr = 5000
 
     # initialize objects for all processes, problem dependent
     us = [la2d_rw_s(L, Nr//num_pro, seeds[i]) for i in range(num_pro)]
@@ -76,14 +76,16 @@ def main():
     U_ave = np.zeros((L, L))
     U_r = []
     for i in range(num_pro):
-        U_r.append(np.load("./data/"+"U_"+str(L)+"_"+str(Nr//num_pro)+"_"+str(i)+".npy"))
+        U_r.append(np.load("./data/srw/"+"U_"+str(L)+"_"+str(Nr//num_pro)+"_"+str(i)+".npy"))
     for i in range(num_pro):
         U_ave += U_r[i] / num_pro
 
     # plot, problem dependent
     U_T = np.transpose(U_ave[1:L-1, 1:L-1])
-    plt.imshow(U_T, origin="lower")
-    plt.savefig("test.pdf", bbox_inches="tight")
+    plt.imshow(U_T, origin="lower", extent=[0, 100, 0, 100])
+    plt.jet()
+    plt.colorbar()
+    plt.savefig("./figs/srw_s.pdf", bbox_inches="tight")
     plt.close()
 
 if __name__ == '__main__': main()

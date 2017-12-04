@@ -52,7 +52,6 @@ class la2d_rw_s:
 
     def rw_at(self, xo, yo):
         "Evaluate point (xo, yo)."
-        # print("ZYC")
         for _ in range(self.Nr):
             rx, ry = xo, yo # Initial position of the rw
             while True:
@@ -79,7 +78,7 @@ class la2d_rw_s:
 
     def save_data(self, i):
         "Save the data."
-        fn = "./data/"+"U_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
+        fn = "./data/srw/"+"U_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
         np.save(fn, self.U)
 
 ###########################################################################
@@ -120,14 +119,10 @@ class la2d_wos_s:
     def update_u(self, r, x, y):
         "Get the value & update U when the rw reaches the boundary.\
         This is obviously boundary dependent."
-        if r == x:
+        if r == self.L-y:
             self.U[self.count] += 1.0 / self.Nr
-        elif r == y:
-            self.U[self.count] += 2.0 / self.Nr
-        elif r == self.L-x:
-            self.U[self.count] += 3.0 / self.Nr
         else:
-            self.U[self.count] += 4.0 / self.Nr
+            self.U[self.count] += 0
 
     def rw_at(self, xo, yo):
         "Evaluate point (xo, yo)."
@@ -142,7 +137,7 @@ class la2d_wos_s:
                 x += r * np.cos(theta)
                 y += r * np.sin(theta)
 
-    def rw_all(self, i):
+    def rw_all(self, k):
         "Evaluate all points."
         for i in range(1, self.Nl):
             print(i)
@@ -153,12 +148,12 @@ class la2d_wos_s:
                 self.Y[self.count] = yo
                 self.rw_at(xo, yo)
                 self.count += 1
-        self.save_data(i)
+        self.save_data(k)
 
-    def save_data(self, i):
+    def save_data(self, k):
         "Save the data."
-        fn = "./data/"+"U_sp_"+str(self.L)+"_"+str(self.Nr)+"_"+str(i)
-        np.save(fn, self.U)
+        fn = "./data/"+"U_wos_s_"+str(self.L)+"_"+str(self.Nr)+"_"+str(k)
+        np.savez(fn, self.X, self.Y, self.U)
 
 ###########################################################################
 
@@ -200,8 +195,8 @@ class la2d_wos_c:
     def update_u(self, c_phi, s_phi):
         "Get the value & update U when the rw reaches the boundary."
         # The boundary value is set here.
-        # self.U[self.count] += 2*c_phi*s_phi / self.Nr
-        self.U[self.count] += np.sign(c_phi) / self.Nr
+        self.U[self.count] += 2*c_phi*s_phi / self.Nr
+        # self.U[self.count] += np.sign(c_phi) / self.Nr
 
     def rw_at(self, xo, yo):
         "Evaluate point (xo, yo)."
@@ -236,7 +231,7 @@ class la2d_wos_c:
 
     def save_data(self, k):
         "Save the data."
-        fn = "./data/"+"U_sp_c_"+str(self.Nro)+"_"+str(self.Nphio)+"_"+str(self.Nr)+"_"+str(k)
+        fn = "./data/"+"U_wos_c_"+str(self.Nro)+"_"+str(self.Nphio)+"_"+str(self.Nr)+"_"+str(k)
         np.savez(fn, self.X, self.Y, self.U)
 
 ###########################################################################

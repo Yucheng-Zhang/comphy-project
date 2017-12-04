@@ -25,11 +25,11 @@ def main():
 
     # set the parameters, problem dependent
     L = 10 # the length of the square boundary
-    Nr = 1000 # number of runs (estimates) for every point
-    epsilon = 0.1 # thickness of the shell
+    Nr = 2000 # number of runs (estimates) for every point
+    epsilon = 0.001 # thickness of the shell
 
     # the set of points to be evaluated
-    Nl = 100
+    Nl = 200
 
     # initialize objects for all processes, problem dependent
     us = [la2d_wos_s(L, Nr//num_pro, epsilon, Nl, seeds[i]) for i in range(num_pro)]
@@ -54,18 +54,22 @@ def main():
     print("Takes", time.time()-t_s, "s.")
 
     # process the data, problem dependent
-    U_ave = np.zeros((L, L))
+    U_ave = np.zeros((Nl-1)**2)
     U_r = []
     for i in range(num_pro):
-        U_r.append(np.load("./data/"+"U_sp_"+str(L)+"_"+str(Nr//num_pro)+"_"+str(i)+".npy"))
+        U_r.append(np.load("./data/"+"U_wos_s_"+str(L)+"_"+str(Nr//num_pro)+"_"+str(i)+".npz"))
     for i in range(num_pro):
-        U_ave += U_r[i] / num_pro
+        U_ave += U_r[i]["arr_2"] / num_pro
+    X = U_r[0]["arr_0"]
+    Y = U_r[0]["arr_1"]
 
     # plot, problem dependent
-    U_T = np.transpose(U_ave[1:L, 1:L])
-    plt.imshow(U_T, origin="lower")
+    plt.scatter(X, Y, c=U_ave, s=1, marker="s")
+    plt.xlim(0, L)
+    plt.ylim(0, L)
+    plt.jet()
     plt.colorbar()
-    plt.savefig("./figs/test_sp.pdf", bbox_inches="tight")
+    plt.savefig("./figs/wos_s.pdf", bbox_inches="tight")
     plt.close()
 
 if __name__ == '__main__': main()
