@@ -15,7 +15,7 @@
 \date{\today}
     
 \begin{abstract}
-    This is the report for the Computational Physics final project.
+    In this report, the Monte Carlo methods for solving PDEs are introduced, including the Simple Random Walk method and the Walk on Spheres method. We mainly focus on the Laplace's Equation with Dirichlet Boundary Conditions. The methods are implemented on two practical bounadry value problems with square and circle boundaries. The properties of the Walk on Spheres method are analyzed based on the two practical problems.
 \end{abstract}
     
 \maketitle
@@ -163,6 +163,21 @@ where $k$ and $t_0$ depend on the shape of the boundary and the set of points to
 In this subsection we study the convergence of the Walk on Spheres method. Here we pick the point at the center of the square bounadry, and study how it's value changes with the number of estimates.
 
 \section{Summary \& Future Work}
+
+% Summary
+
+Some future work directions include,
+\begin{itemize}
+    \item \emph{Green's Function First Passage}:
+    \begin{equation*}
+        p(x_0, x) = \pdv{G(x_0, x)}{n}
+    \end{equation*}
+    If we know the Green's Function for a domain, we can directly simulate the transition from the starting point to the boundary. Then we can get all the estimates directly.
+    \item \emph{Parallelization on GPU}:\\
+    The Monte Carlo methods here are naturally parallel, so they may be accelarated a lot with GPU computing.
+    \item \emph{How things work for other PDEs}:\\
+    e.g. Diffusion Equation etc.
+\end{itemize}
 
 \section{Acknowledgement}
 
