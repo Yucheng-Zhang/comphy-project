@@ -1,7 +1,7 @@
 """
 The main process for la2d_wos_s.
 
-Yucheng Zhang, yz4035@nyu.edu, 12/02/2017
+Yucheng Zhang, yz4035@nyu.edu, 12/04/2017
 
 Note: For a new problem, find the "problem dependent" parts and modify them.
 """
@@ -72,4 +72,5 @@ def main():
     plt.savefig("./figs/wos_s.pdf", bbox_inches="tight")
     plt.close()
 
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+    main()

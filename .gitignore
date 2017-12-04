@@ -2,6 +2,7 @@
 /.vscode/
 /.DS_Store
 data/.DS_Store
+figs/.DS_Store
 *.aux
 *.bbl
 *.blg
@@ -10,3 +11,7 @@ data/.DS_Store
 *.log
 *.synctex.gz
 *.bib
+*.nav
+*.out
+*.snm
+*.toc

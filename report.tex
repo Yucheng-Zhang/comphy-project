@@ -114,8 +114,6 @@ In \emph{Python}, there are many packages for parallel computing. In this projec
 
 \subsection{Square Boundary Problem}
 
-Assume we have a 2D Laplace problem with the boundary given as a square.
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.4\textwidth]{./figs/srw_s}
@@ -128,9 +126,9 @@ Assume we have a 2D Laplace problem with the boundary given as a square.
     \caption{\label{fig:wos_s} WoS method on 2D Square Boundary.}
 \end{figure}
 
-\subsection{Circle Boundary Problem}
+Assume we have a 2D Laplace problem with the boundary given as a square. The results are shown in FIG.~\ref{fig:srw_s} and FIG.~\ref{fig:wos_s}.
 
-Here we study the 2D Laplace problem with a circle boundary.
+\subsection{Circle Boundary Problem}
 
 \begin{figure}[htbp]
     \centering
@@ -138,7 +136,9 @@ Here we study the 2D Laplace problem with a circle boundary.
     \caption{\label{fig:wos_c} WoS method on 2D Circle Boundary.}
 \end{figure}
 
-\subsection{The Influence of $\epsilon$}
+Here we study the 2D Laplace problem with a circle boundary. The result is shown in FIG.~\ref{fig:wos_c}.
+
+\subsection{WoS method - The Influence of $\epsilon$}
 
 \begin{figure}[htbp]
     \centering
@@ -146,9 +146,23 @@ Here we study the 2D Laplace problem with a circle boundary.
     \caption{\label{fig:ep_t} The running time - $\epsilon$ relation on both square and circle boundary.}
 \end{figure}
 
+For the Walk on Spheres method, here we study the influence of the shell thickness $\epsilon$ on the running time of the program. We evaluate a certain set of points with a fixed number of estimates for each point. The relation between the running time and $\epsilon$ is shown in FIG.~\ref{fig:ep_t}. As we can see, for the two boundaries we simulate here, the square boundary and the circle boundary, the relation between the running time $t$ and the shell thickness $\epsilon$ goes like,
+\begin{equation}
+    t = -k\log\epsilon + t_0,
+\end{equation}
+where $k$ and $t_0$ depend on the shape of the boundary and the set of points to be evaluated. This logarithmic relationship here means that we can decrease the order of magnitude of $\epsilon$ to increase the accuracy of the estimates with an acceptable cost of time.
+
+\subsection{WoS method - Convergence}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{./figs/err_es}
+    \caption{\label{fig:err_es} The convergence of the WoS method at the center point of the square boundary.}
+\end{figure}
+
+In this subsection we study the convergence of the Walk on Spheres method. Here we pick the point at the center of the square bounadry, and study how it's value changes with the number of estimates.
+
 \section{Summary \& Future Work}
-
-
 
 \section{Acknowledgement}
 

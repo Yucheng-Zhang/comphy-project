@@ -51,17 +51,17 @@ Department of Physics, New York University \\
 \frametitle{Laplace's Equation with Dirichlet Boundary Condition}
 \begin{itemize}
 \item
-\begin{equation}
+\begin{equation*}
     \begin{split}
         &\nabla^2 u = 0 \qquad \text{on}\quad G, \\
         &u = f(x) \qquad \text{on}\quad \partial G.
     \end{split}
-\end{equation}
+\end{equation*}
 \item
 Discrete form with centered finite difference approximation,
-\begin{equation}
+\begin{equation*}
     u_{i,j} = \frac{1}{4} \qty(u_{i+1,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1}).
-\end{equation}
+\end{equation*}
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.3\textwidth]{./figs/disc}
@@ -132,9 +132,10 @@ Discrete form with centered finite difference approximation,
 \item For the first way,
 \begin{enumerate}
     \item Allocate the estimates you want to get for every point to all available cores;
-    \item Initialize the random number generator of different processes with different seeds;
+    \item Initialize the random number generator of different processes with different seeds, with \emph{numpy.random.RandomState(seed)}.
     \item Wait for all the processes to finish, then collect and average the data.
 \end{enumerate}
+\item \emph{Python} package \emph{multiprocessing}.
 \end{itemize}
 \end{frame}
 
@@ -147,7 +148,7 @@ Discrete form with centered finite difference approximation,
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.7\textwidth]{./figs/wos_s}
-    \caption{\label{fig:wos_s} WoS method on 2D Square Boundary.}
+    \caption{\label{fig:wos_s} WoS method on 2D Square Boundary, $200\times 200$ points, $2,000$ estimates for each point.}
 \end{figure}
 \end{frame}
 
@@ -160,7 +161,7 @@ Discrete form with centered finite difference approximation,
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.75\textwidth]{./figs/wos_c}
-    \caption{\label{fig:wos_c} WoS method on 2D Circle Boundary.}
+    \caption{\label{fig:wos_c} WoS method on 2D Circle Boundary, $10,620$ points, $1,000$ estimates for each point.}
 \end{figure}
 \end{frame}
 
@@ -170,16 +171,23 @@ Discrete form with centered finite difference approximation,
 
 \begin{frame}
 \frametitle{Analysis of WoS method - Running time vs. $\epsilon$}
+\begin{itemize}
+    \item $t = -k\log\epsilon + t_0$
+\end{itemize}
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.75\textwidth]{./figs/ep_t}
-    \caption{\label{fig:ep_t} The running time - $\epsilon$ relation on both square and circle boundary.}
+    \includegraphics[width=.66\textwidth]{./figs/ep_t}
+    \caption{\label{fig:ep_t} The running time - $\epsilon$ relation on both square and circle boundaries.}
 \end{figure}
 \end{frame}
 
 \begin{frame}
-\frametitle{Analysis of WoS method - Convergence rate}
-
+\frametitle{Analysis of WoS method - Convergence}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.75\textwidth]{./figs/err_es}
+    \caption{\label{fig:err_es} The convergence of the WoS method at the center point of the square boundary.}
+\end{figure}
 \end{frame}
 
 %------------------------------------------------
@@ -188,7 +196,17 @@ Discrete form with centered finite difference approximation,
 
 \begin{frame}
 \frametitle{Future Work}
-
+\begin{itemize}
+    \item \emph{Green's Function First Passage}:
+    \begin{equation*}
+        p(x_0, x) = \pdv{G(x_0, x)}{n}
+    \end{equation*}
+    If we know the Green's Function for a domain, we can directly simulate the transition from the starting point to the boundary. Then we can get all the estimates directly.
+    \item \emph{Parallelization on GPU}:\\
+    The Monte Carlo methods here are naturally parallel, so they may be accelarated a lot with GPU computing.
+    \item \emph{How things work for other PDEs}:\\
+    e.g. Diffusion Equation etc.
+\end{itemize}
 \end{frame}
 
 %------------------------------------------------

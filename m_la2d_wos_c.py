@@ -1,7 +1,7 @@
 """
 The main process for la2d_wos_c.
 
-Yucheng Zhang, yz4035@nyu.edu, 12/02/2017
+Yucheng Zhang, yz4035@nyu.edu, 12/04/2017
 
 Note: For a new problem, find the "problem dependent" parts and modify them.
 """
@@ -32,27 +32,27 @@ def main():
     Nro = 60
     Nphio = 6
 
-    # # initialize objects for all processes, problem dependent
-    # us = [la2d_wos_c(R, Nr//num_pro, epsilon, Nro, Nphio, seeds[i]) for i in range(num_pro)]
+    # initialize objects for all processes, problem dependent
+    us = [la2d_wos_c(R, Nr//num_pro, epsilon, Nro, Nphio, seeds[i]) for i in range(num_pro)]
 
-    # # set up all processes
-    # processes = [mp.Process(target=us[i].rw_all, args=(i,)) for i in range(num_pro)]
-    
-    # # get the beginning time
-    # t_s = time.time()
+    # set up all processes
+    processes = [mp.Process(target=us[i].rw_all, args=(i,)) for i in range(num_pro)]
 
-    # # start all processes
-    # for p in processes:
-    #     p.start()
-    # print("Processes start successfully!")
+    # get the beginning time
+    t_s = time.time()
 
-    # # wait for all processes to end
-    # for p in processes:
-    #     p.join()
-    # print("Processes end successfully!")
+    # start all processes
+    for p in processes:
+        p.start()
+    print("Processes start successfully!")
 
-    # # output the total running time of the program
-    # print("Takes", time.time()-t_s, "s.")
+    # wait for all processes to end
+    for p in processes:
+        p.join()
+    print("Processes end successfully!")
+
+    # output the total running time of the program
+    print("Takes", time.time()-t_s, "s.")
 
     # process the data, problem dependent
     U_ave = np.zeros(Nphio * Nro * (Nro - 1) // 2)
@@ -71,4 +71,5 @@ def main():
     plt.savefig("./figs/wos_c.pdf", bbox_inches="tight")
     plt.close()
 
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+    main()

@@ -1,7 +1,7 @@
 """
 The definition of all classes.
 
-Yucheng Zhang, yz4035@nyu.edu, 12/02/2017
+Yucheng Zhang, yz4035@nyu.edu, 12/04/2017
 
 Random Number Generator: numpy.random
 
