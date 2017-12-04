@@ -1,5 +1,0 @@
-1, set clear expectation for the project
-
-2, GPU parallel
-
-GIFs: one random walk; walk on sphere
