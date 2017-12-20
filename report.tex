@@ -1,4 +1,4 @@
-\documentclass[aps, prl, reprint, groupedaddress]{revtex4-1}
+\documentclass[aps, prl, preprint, groupedaddress]{revtex4-1}
 
 \usepackage{physics}
 \usepackage{graphicx}
@@ -39,7 +39,7 @@ As shown in FIG.~\ref{fig:disc}.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.4\textwidth]{./figs/disc}
+    \includegraphics[width=.8\textwidth]{./figs/disc}
     \caption{\label{fig:disc} Finite centered difference on 2D.}
 \end{figure}
 
@@ -49,7 +49,7 @@ For the relaxation method, we use this equation, start from the boundary, and it
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.4\textwidth]{./figs/srw}
+    \includegraphics[width=.8\textwidth]{./figs/srw}
     \caption{\label{fig:srw} Simple Random Walk method.}
 \end{figure}
 
@@ -71,7 +71,7 @@ Consider a sphere centered at $\bm{r}$, for a simple Brownian motion starting fr
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.46\textwidth]{./figs/wos}
+    \includegraphics[width=.8\textwidth]{./figs/wos}
     \caption{\label{fig:wos} Walk on Spheres method.}
 \end{figure}
 
@@ -116,13 +116,13 @@ In \emph{Python}, there are many packages for parallel computing. In this projec
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.4\textwidth]{./figs/srw_s}
+    \includegraphics[width=.8\textwidth]{./figs/srw_s}
     \caption{\label{fig:srw_s} SRW method on 2D Square Boundary with Square Lattice.}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.4\textwidth]{./figs/wos_s}
+    \includegraphics[width=.8\textwidth]{./figs/wos_s}
     \caption{\label{fig:wos_s} WoS method on 2D Square Boundary.}
 \end{figure}
 
@@ -132,7 +132,7 @@ Assume we have a 2D Laplace problem with the boundary given as a square. The res
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.4\textwidth]{./figs/wos_c}
+    \includegraphics[width=.8\textwidth]{./figs/wos_c}
     \caption{\label{fig:wos_c} WoS method on 2D Circle Boundary.}
 \end{figure}
 
@@ -142,7 +142,7 @@ Here we study the 2D Laplace problem with a circle boundary. The result is shown
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.4\textwidth]{./figs/ep_t}
+    \includegraphics[width=.8\textwidth]{./figs/ep_t}
     \caption{\label{fig:ep_t} The running time - $\epsilon$ relation on both square and circle boundary.}
 \end{figure}
 
@@ -156,7 +156,7 @@ where $k$ and $t_0$ depend on the shape of the boundary and the set of points to
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.4\textwidth]{./figs/err_es}
+    \includegraphics[width=.8\textwidth]{./figs/err_es}
     \caption{\label{fig:err_es} The convergence of the WoS method at the center point of the square boundary.}
 \end{figure}
 
@@ -181,6 +181,31 @@ Some future work directions include,
 
 \section{Acknowledgement}
 
-\bibliography{}
+I'd like to thank Prof. Andrew MacFadyen for his instructive lectures during the class. I would also like to thank TA Marc Williamson for helpful discussions.
+
+\section{References}
+
+\begin{itemize}
+
+    \item Gregory F. Lawler.
+    \textit{Random Walk and the Heat Equation}
+    \\\texttt{http://www.math.uchicago.edu/\~{}lawler/reu.pdf}
+
+    \item Kevin Hu.
+    \textit{Partial Differential Equations and Random Walks}
+    \\\texttt{http://www.math.toronto.edu/courses/mat394h1/20139/Random\_Walk\_and\_PDE\_1.pdf}
+
+    \item Eric Guan.
+    \textit{Random Walks in $Z^d$ and the Dirichlet Problem}
+    \\\texttt{http://www.math.uchicago.edu/\~{}may/VIGRE/VIGRE2011/REUPapers/Guan.pdf}
+
+    \item
+    \textit{Monte Carlo Methods in Partial Differential Equations}
+    \\\texttt{http://www.hep.fsu.edu/\~{}berg/teach/mcmc05/homework/Fleming\_PDEs.ppt}
+
+    \item Michael Mascagni.
+    \textit{Monte Carlo Methods and Partial Differential Equations: Algorithms and Implications for High-Performance Computing}
+    \\\texttt{https://engineering.jhu.edu/ams/wp-content/uploads/sites/44/2015/04/\\Exascale\_Mascagni.pdf}
+\end{itemize}
 
 \end{document}
