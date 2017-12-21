@@ -15,27 +15,27 @@
 \date{\today}
     
 \begin{abstract}
-    In this report, the Monte Carlo methods for solving PDEs are introduced, including the Simple Random Walk method and the Walk on Spheres method. We mainly focus on the Laplace's Equation with Dirichlet Boundary Conditions. The methods are implemented on two practical bounadry value problems with square and circle boundaries. The properties of the Walk on Spheres method are analyzed based on the two practical problems.
+    In this report, Monte Carlo methods for solving Partial Differential Equations are introduced, including the Simple Random Walk method and the Walk on Spheres method. We mainly focus on the Laplace's Equation with Dirichlet Boundary Conditions. The methods are implemented and tested on two practical bounadry value problems with square and circle boundaries. The properties of the Walk on Spheres method are analyzed.
 \end{abstract}
     
 \maketitle
 
 \section{Introduction}
 
-There are many numerical methods for solving different types of Partial Differential Equations (PDEs) in Boundary Value Problems (BVPs), such as the relaxation method and the Gauss-Seidel method. These methods are all deterministic methods. In this report, we explore the Monte Carlo method for solving PDEs in BVPs. 
+There are many numerical methods for solving different types of Partial Differential Equations (PDEs) in Boundary Value Problems (BVPs), such as the relaxation method and the Gauss-Seidel method, which we have learnt in the lecture. Obviously, these two methods are both deterministic methods. In this report and the final project, we explore the Monte Carlo methods for solving PDEs with boundary value conditions. 
 
-We mainly focus on Laplace's Equation with Dirichlet Boundary Conditions,
+In this report, we mainly focus on Laplace's Equation with Dirichlet Boundary Conditions, i.e.
 \begin{equation}
     \nabla^2 u = 0
     \label{eq:laplace}
 \end{equation} inside the boundary, and
 \begin{equation}
     u = f(x)
-\end{equation} on the boundary. In 2D, the Laplace's Equation Eq.~\ref{eq:laplace} can be discreted with finite difference approximation, the centered difference reads,
+\end{equation} given on the boundary. For a two dimensional problem, the Laplace's Equation Eq.~\ref{eq:laplace} can be discreted with finite difference approximation. The centered difference reads,
 \begin{equation}
-    u_{i,j} = \frac{1}{4} \qty(u_{i+1,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1}).
+    u_{i,j} = \frac{1}{4} \qty(u_{i+1,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1}),
 \end{equation}
-As shown in FIG.~\ref{fig:disc}.
+as shown in FIG.~\ref{fig:disc}. In this report, we take 2D problem as the example. But we should notice that this discrete form can be easily generalized to higher dimensions.
 
 \begin{figure}[htbp]
     \centering
@@ -43,7 +43,7 @@ As shown in FIG.~\ref{fig:disc}.
     \caption{\label{fig:disc} Finite centered difference on 2D.}
 \end{figure}
 
-For the relaxation method, we use this equation, start from the boundary, and iterate until we get the desired accuracy. Here we look at this equation in a different way. We should notice that the value at one point is the average of its neighbours' values. So we can regard the $\frac{1}{4}$ as the statistical weight of each neighbour while calculating the value of the center point. Then we can construct the Monte Carlo method based on this point of view.
+For the relaxation method, we use this equation, start from the boundary, and iterate until we get the desired accuracy. Here we look at this equation in a different way. We should notice that the value at one point is the statistical average of its neighbours' values. So we can regard the $\frac{1}{4}$ as the statistical weight of each neighbour while calculating the value of the center point. Then we can construct the Monte Carlo method based on this point of view.
 
 \subsection{Simple Random Walk Method}
 
@@ -55,19 +55,32 @@ For the relaxation method, we use this equation, start from the boundary, and it
 
 Given the point $P_0$ whose value we want to evaluate on the grid,
 \begin{enumerate}
-    \item Pick a neighbour point, e.g. $P_1$, with proper probability randomly, here it's $\frac{1}{4}$ for each point.
-    \item We don't know the value at $P_1$, but we know it's the average of its neighbours, so pick one of it's neighbours, e.g. $P_2$. Continue this process, until we reach a point on the boundary, e.g. $P_n$, whose value is given.
-    \item We know that $P_n$ is an estimate of $P_{n-1}$, which is an estimate of $P_{n-2}$, etc, etc, all the way back to $P_0$. So after this random walk process, we get an estimate of $P_0$.
-    \item Do a large amount of random walks from $P_0$ to the boundary, then average all the estimates, we can get a good estimate of the value at $P_0$, whose accuracy depends on the number of random walks, i.e. the number of estimates.
+    \item Pick a neighbour point randomly, e.g. $P_1$, with proper probability distribution, here it's $\frac{1}{4}$ for each point.
+    \item We don't know the value at $P_1$, but we know it's the average of its neighbours, so pick one of it's neighbours randomly with proper probability distribution, e.g. $P_2$. Continue this process, until we reach a point on the boundary, e.g. $P_n$, whose value is given.
+    \item We know that $P_n$ is an estimate of $P_{n-1}$, which is an estimate of $P_{n-2}$, etc, etc, all the way back to $P_0$. So after this random walk process, we get the value of $P_n$ as an estimate of $P_0$.
+    \item As a Monte Carlo method, we do a large amount of random walks from $P_0$ to the boundary, then average all the estimates, we can get a good estimate of the value at $P_0$, whose accuracy depends on the number of random walks, i.e. the number of estimates.
 \end{enumerate}
+This is the process of the Simple Random Walk method, which is very straightforward based on the discrete form of the Laplace's Equation.
 
-% Poisson equation
+One more thing worth being mentioned here is that this method can be easily generalized for the Poisson's Equation,
+\begin{equation}
+    \nabla^2 u = q(x,y)
+\end{equation}
+with boundary value condition. The discrete form of Poisson's Equation reads,
+\begin{equation}
+    u_{i,j} = \frac{1}{4} \qty(u_{i+1,j}+u_{i-1,j}+u_{i,j+1}+u_{i,j-1}) - \frac{1}{4} q_{i,j}.
+\end{equation}
+Then after one random walk process with $n$ steps, the estimate is given by,
+\begin{equation}
+    u_n - \frac{1}{4}\sum_{k=0}^{n-1}q_k,
+\end{equation}
+where $u_n$ is the value on the boundary and $q_k$'s are the values on the path. More details can be found in references, in the following discussion, we still keep concentration on the Laplace's Equation.
 
 \subsection{Walk on Spheres}
 
-As we should notice, for the Laplace Equation, one estimate given by one random walk is just the value at the point on the boundary where the random walk ends. So the estimate doesn't depend on the path of the random walk. If we let the grid spacing go to zero, which obviously will increase the accuracy of the estimate, then the random walk here becomes simple Brownian motion.
+As we should notice, for the Laplace Equation, one estimate given by one random walk is just the value at the point on the boundary where the random walk ends. So the estimate doesn't really depend on the path of the random walk. If we let the grid spacing go to zero, which obviously will increase the accuracy of the estimate, then the random walk here becomes simple Brownian motion.
 
-Consider a sphere centered at $\bm{r}$, for a simple Brownian motion starting from $\bm{r}$, the possibility for the motion to reach any point on the sphere is equal. So since the path doesn't matter here for the Laplace equation, why do we simulate the Brownian motion step by step? We can jump to one point on the sphere directly!
+Consider a sphere centered at $\bm{r}$, for a simple Brownian motion starting from $\bm{r}$, the possibility for the motion to reach any point on the sphere is the same. So since the path doesn't matter here for the Laplace equation, why do we simulate the Brownian motion step by step? We can jump to one point on the sphere directly! This will lead us to the Walk on Spheres method.
 
 \begin{figure}[htbp]
     \centering
@@ -75,13 +88,14 @@ Consider a sphere centered at $\bm{r}$, for a simple Brownian motion starting fr
     \caption{\label{fig:wos} Walk on Spheres method.}
 \end{figure}
 
-The Walk on Spheres (WoS) method is shown in FIG.~\ref{fig:wos}. Here are some explainations.
+The process of the Walk on Spheres (WoS) method is shown in FIG.~\ref{fig:wos}. Here are some explainations.
 \begin{itemize}
     \item The radius of the spheres (circles in 2D) are determined by the shortest distance from the point to the boundary, e.g. $r_0$, $r_1$, and $r_2$ in FIG.~\ref{fig:wos}.
     \item The next point is chosen randomly on the sphere, e.g. points $1, 2, 3$ in FIG.~\ref{fig:wos}.
     \item Since the WoS method is grid-free, we use the shell with thickness $\epsilon$ to judge whether the random motion reaches the boundary, as shown in FIG.~\ref{fig:wos}.
 \end{itemize}
 
+Since most of the time in the Simple Random Walk method is wasted on the random walk, we can expect the WoS method to be much faster. Also, the WoS method is grid free, so there is no discretization errors. The error for one estimate is caused by the shell thickness $\epsilon$, which will be analyzed in the implementation section.
 
 \subsection{Characteristics of Monte Carlo method}
 
@@ -89,7 +103,7 @@ Both the Simple Random Walk (SRW) and Walk on Spheres (WoS) methods are Monte Ca
 
 \subsubsection{Independence of points}
 
-The first thing to notice is that unlike the relaxation or Gauss-Seidel methods, the points on the grid for the SRW or on the grid-free WoS, they are all independent. So it's very fast to estimate some point values.
+The first thing to notice is that unlike the relaxation or Gauss-Seidel methods, the points on the grid for the SRW or on the grid-free WoS are totally independent. So it's very fast to estimate some point values instead of the whole space.
 
 \subsubsection{Boundary \& Dimension}
 
@@ -99,14 +113,14 @@ For the Monte Carlo methods here, the boundary doesn't matter a lot. The only th
 
 Not only different points, as mentioned above, but also different estimates for one point are independent. So these Monte Carlo methods are naturally parallel. The two most straightforward ways to parallelize the program are,
 \begin{itemize}
-    \item Parallelize the different estimates of one point, then average the results from different processes.
+    \item Parallelize the different estimates for one point, then average the results from different processes.
     \item Parallelize the set of points to be evaluated.
 \end{itemize}
-
+In our simulation, we mainly take the first way.
 
 \section{Implementation \& Analysis}
 
-In this section, we first introduce how the programs are implemented. Then we use these methods to study two practical problems and analyze the properties of these methods.
+In this section, we first introduce how the programs are implemented. Then we use the methods to study two practical problems and analyze the properties of these methods.
 
 \subsection{Parallelization in \emph{Python}}
 
@@ -206,6 +220,10 @@ I'd like to thank Prof. Andrew MacFadyen for his instructive lectures during the
     \item Michael Mascagni.
     \textit{Monte Carlo Methods and Partial Differential Equations: Algorithms and Implications for High-Performance Computing}
     \\\texttt{https://engineering.jhu.edu/ams/wp-content/uploads/sites/44/2015/04/\\Exascale\_Mascagni.pdf}
+
+    \item K.K.Sabelfeld and N.A.Simonov.
+    \textit{Random Walks on Boundary for Solving PDEs}
+    \\\texttt{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.12.7107\&rep=rep1\&type=pdf}
 \end{itemize}
 
 \end{document}
