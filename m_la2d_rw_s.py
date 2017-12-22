@@ -1,7 +1,7 @@
 """
 The main process for la2d_rw_s.
 
-Yucheng Zhang, yz4035@nyu.edu, 12/04/2017
+Yucheng Zhang, yz4035@nyu.edu, 12/21/2017
 
 Note: For a new problem, find the "problem dependent" parts and modify them.
 """
