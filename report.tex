@@ -15,16 +15,16 @@
 \date{\today}
     
 \begin{abstract}
-    In this report, Monte Carlo methods for solving Partial Differential Equations are introduced, including the Simple Random Walk method and the Walk on Spheres method. We mainly focus on the Laplace's Equation with Dirichlet Boundary Conditions. The methods are implemented and tested on two practical bounadry value problems with square and circle boundaries. The properties of the Walk on Spheres method are analyzed.
+    In this report, Monte Carlo methods for solving Partial Differential Equations are introduced, including the Simple Random Walk method and the Walk on Spheres method. We mainly focus on the Laplace's Equation with Dirichlet Boundary Conditions. The methods are implemented on two practical bounadry value problems with square and circle boundaries. The properties of the Walk on Spheres method are analyzed.
 \end{abstract}
     
 \maketitle
 
 \section{Introduction}
 
-There are many numerical methods for solving different types of Partial Differential Equations (PDEs) in Boundary Value Problems (BVPs), such as the relaxation method and the Gauss-Seidel method, which we have learnt in the lecture. Obviously, these two methods are both deterministic methods. In this report and the final project, we explore the Monte Carlo methods for solving PDEs with boundary value conditions. 
+There are many numerical methods for solving different types of Partial Differential Equations (PDEs) with Boundary Value conditions, such as the relaxation method and the Gauss-Seidel method, which we have learnt in the lecture. Obviously, these two methods are both deterministic methods. In this final project, we explore the Monte Carlo methods for solving PDEs with boundary value conditions. 
 
-In this report, we mainly focus on Laplace's Equation with Dirichlet Boundary Conditions, i.e.
+In this report, we mainly focus on Laplace's Equation with Dirichlet Boundary Conditions, i.e. we have
 \begin{equation}
     \nabla^2 u = 0
     \label{eq:laplace}
@@ -39,7 +39,7 @@ as shown in FIG.~\ref{fig:disc}. In this report, we take 2D problem as the examp
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.8\textwidth]{./figs/disc}
+    \includegraphics[width=.6\textwidth]{./figs/disc}
     \caption{\label{fig:disc} Finite centered difference on 2D.}
 \end{figure}
 
@@ -58,7 +58,7 @@ Given the point $P_0$ whose value we want to evaluate on the grid,
     \item Pick a neighbour point randomly, e.g. $P_1$, with proper probability distribution, here it's $\frac{1}{4}$ for each point.
     \item We don't know the value at $P_1$, but we know it's the average of its neighbours, so pick one of it's neighbours randomly with proper probability distribution, e.g. $P_2$. Continue this process, until we reach a point on the boundary, e.g. $P_n$, whose value is given.
     \item We know that $P_n$ is an estimate of $P_{n-1}$, which is an estimate of $P_{n-2}$, etc, etc, all the way back to $P_0$. So after this random walk process, we get the value of $P_n$ as an estimate of $P_0$.
-    \item As a Monte Carlo method, we do a large amount of random walks from $P_0$ to the boundary, then average all the estimates, we can get a good estimate of the value at $P_0$, whose accuracy depends on the number of random walks, i.e. the number of estimates.
+    \item As a typical Monte Carlo method, we do a large amount of random walks from $P_0$ to the boundary, then average all the estimates. We can get a good estimate of the value at $P_0$, whose accuracy depends on the number of random walks, i.e. the number of estimates.
 \end{enumerate}
 This is the process of the Simple Random Walk method, which is very straightforward based on the discrete form of the Laplace's Equation.
 
@@ -99,7 +99,7 @@ Since most of the time in the Simple Random Walk method is wasted on the random 
 
 \subsection{Characteristics of Monte Carlo method}
 
-Both the Simple Random Walk (SRW) and Walk on Spheres (WoS) methods are Monte Carlo methods. The Monte Carlo methods here have some characteristics and advantages that normal deterministic methods don't have.
+Both the Simple Random Walk (SRW) and Walk on Spheres (WoS) methods are Monte Carlo methods. These Monte Carlo methods here have some characteristics and advantages that normal deterministic methods don't have.
 
 \subsubsection{Independence of points}
 
@@ -116,41 +116,45 @@ Not only different points, as mentioned above, but also different estimates for 
     \item Parallelize the different estimates for one point, then average the results from different processes.
     \item Parallelize the set of points to be evaluated.
 \end{itemize}
-In our simulation, we mainly take the first way.
+In our simulation, we take the first way.
 
 \section{Implementation \& Analysis}
 
-In this section, we first introduce how the programs are implemented. Then we use the methods to study two practical problems and analyze the properties of these methods.
+In this section, we first introduce how the parallel programs are implemented. Then we use the methods to study two practical problems and analyze the properties of these methods.
 
 \subsection{Parallelization in \emph{Python}}
 
 In \emph{Python}, there are many packages for parallel computing. In this project, we use the \emph{multiprocessing} package. For a given set of points to be evaluated, we allocate the total number of independent estimates of every point to all available cores. Then we initialize the random number generators in all processes with different seeds. Here we use the \emph{numpy.random} module to produce random numbers, which can be initialized with \emph{numpy.random.RandomState(seed)}.
 
-\subsection{Square Boundary Problem}
+\subsection{Implementation on two boundary shapes}
+
+\subsubsection{Square Boundary Problem}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.8\textwidth]{./figs/srw_s}
-    \caption{\label{fig:srw_s} SRW method on 2D Square Boundary with Square Lattice.}
+    \caption{\label{fig:srw_s} SRW method on 2D Square Boundary with Square Lattice, $100\times 100$ points, $5,000$ estimates for each point.}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.8\textwidth]{./figs/wos_s}
-    \caption{\label{fig:wos_s} WoS method on 2D Square Boundary.}
+    \caption{\label{fig:wos_s} WoS method on 2D Square Boundary ($1,0,0,0$), $200\times 200$ points, $2,000$ estimates for each point.}
 \end{figure}
 
-Assume we have a 2D Laplace problem with the boundary given as a square. The results are shown in FIG.~\ref{fig:srw_s} and FIG.~\ref{fig:wos_s}.
+Assume we have a 2D Laplace problem with the boundary given as a square. The results of the SRW method and the WoS method are shown in FIG.~\ref{fig:srw_s} and FIG.~\ref{fig:wos_s} seperately. For this problem, the SRW method took a few hours while the WoS method took only a few minutes. This shows that the WoS method is much faster than the SRW method, as we have expected.
 
-\subsection{Circle Boundary Problem}
+\subsubsection{Circle Boundary Problem}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.8\textwidth]{./figs/wos_c}
-    \caption{\label{fig:wos_c} WoS method on 2D Circle Boundary.}
+    \caption{\label{fig:wos_c} WoS method on 2D Circle Boundary ($\sin2\theta$), $10,620$ points, $1,000$ estimates for each point.}
 \end{figure}
 
-Here we study the 2D Laplace problem with a circle boundary. The result is shown in FIG.~\ref{fig:wos_c}.
+Here we study the 2D Laplace problem with a circle boundary. The result of the WoS method is shown in FIG.~\ref{fig:wos_c}.
+
+In the following sections, we will analyze some properties of the WoS method based on these two boundaries.
 
 \subsection{WoS method - The Influence of $\epsilon$}
 
@@ -174,11 +178,11 @@ where $k$ and $t_0$ depend on the shape of the boundary and the set of points to
     \caption{\label{fig:err_es} The convergence of the WoS method at the center point of the square boundary.}
 \end{figure}
 
-In this subsection we study the convergence of the Walk on Spheres method. Here we pick the point at the center of the square bounadry, and study how it's value changes with the number of estimates.
+Here we study the convergence of the Walk on Spheres method. We pick the point at the center of the square bounadry, and study how its value changes with the number of estimates. The result is shown in FIG.~\ref{fig:err_es}. As we can see, the error decreases as the number of estimates increases, but we haven't found a proper scaling behavior.
 
 \section{Future Work}
 
-Some future work directions include,
+The time for this final project is limited, and there are still many things which are very interesting. Some future work directions include,
 \begin{itemize}
     \item \emph{Green's Function First Passage}:
     \begin{equation*}
@@ -190,6 +194,7 @@ Some future work directions include,
     \item \emph{How things work for other PDEs}:\\
     e.g. Diffusion Equation etc.
 \end{itemize}
+Currently I am still trying to learn the GPU parallelization.
 
 \section{Acknowledgement}
 
